@@ -64,3 +64,66 @@ Afin d'obtenir ce résultat, implémenter les classes ci-après en suivant les s
 | Méthode | Description |
 |---|---|
 | _**static void** main(**String** args)_ | Processus principal. Crée une nouvelle partie et l'initialise, puis lui demande de réaliser un cycle d'exécution tant qu'elle est en cours. |
+
+## Mission 2: objets et interactions
+
+Maintenant que nos joueurs sont capables de se déplacer d'un lieu à une autre, il faudrait ajouter des éléments (objets, personnages, monstres…) avec lesquels ils pourront interagir.
+
+<details>
+<summary>Exemple</summary>
+
+> You are in the bedroom. West is the bathroom, north is the corridor. There is a bed and a mirror.
+
+`use bed`
+
+> You take a quick nap. You feel refreshed!
+
+`use mirror`
+
+> You see your reflection. Looking good!
+
+`open mirror`
+
+> This does not open!
+
+`talk to mirror`
+
+> Silence...
+
+</details>
+
+### 1. Intégrer des objets à l'univers
+
+- Écrire une classe `Item`, qui représente les éléments interactifs de l'univers.
+- Chaque élément doit avoir un nom.
+- Chaque pièce peut contenir une quantité indéterminée d'éléments. La liste des éléments visibles doit être affichée automatiquement dans chaque pièce.
+
+### 2. Interagir avec des éléments
+
+- Écrire une classe `Command` qui représente une commande que l'utilisateur peut entrer dans la console.
+- Chaque commande doit avoir un texte par défaut qui s'affichera si jamais l'utilisateur tente de l'utiliser avec un élément qui n'a pas été prévu pour (exemple: `talk to mirror`).
+- Chaque élément peut réagir à un nombre indéterminé de commandes. Dans un premier temps, utiliser une commande particulière avec un élément particulier doit produire l'affichage d'un texte particulier.
+
+### 3. Programmer des interactions complexes
+
+Utiliser une commande sur un élément doit pouvoir produire une variété d'effets, dont afficher un texte n'est qu'un exemple.
+
+Implémenter une ou plusieurs des classes suivantes:
+
+| Classe | Description |
+|---|---|
+| **MessageEffect** | Produit l'affichage d'un message dans la console. |
+| **EndGameEffect** | Termine la partie en cours. |
+| **RenameItemEffect** | Change le nom d'un élément donné de manière permanente. |
+| **RemoveItemEffect** | Supprime un élément donné de la pièce dans laquelle il apparaît de manière permanente. |
+
+- Chaque élément peut réagir à chaque commande en utilisant l'un des effets proposés ci-dessus (au lieu de simplement afficher un message comme précédemment demandé).
+- BONUS: Chaque élément peut réagir à chaque commande en utilisant une série d'effets, au lieu d'un seul effet.
+
+#### Exemples d'interactions à implémenter
+
+- Manger le biscuit sur la table de la cuisine (`eat cookie`) doit produire sa disparition.
+- Ouvrir le tiroir du bureau dans la chambre (`open drawer`) doit provoquer la réalisation que le tiroir est vide, et son nom doit changer en conséquence (`empty drawer`).
+- Toucher une prise électrique (`touch plug`) doit produire la mort du héros, et donc la fin de la partie.
+
+Si le bonus de l'étape 3 a été réalisé, chaque interaction doit être accompagnée d'au moins un message décrivant l'effet obtenu.
