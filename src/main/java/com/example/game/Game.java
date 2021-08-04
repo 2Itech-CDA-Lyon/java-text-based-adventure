@@ -1,5 +1,6 @@
 package com.example.game;
 
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -51,6 +52,10 @@ public class Game
         bathroom.setRoomInDirection(east, bedroom);
         bedroom.setRoomInDirection(north, corridor);
         corridor.setRoomInDirection(south, bedroom);
+
+        Item bed = new Item(bedroom, "bed");
+        Item desk = new Item(bedroom, "desk");
+
         // Choisit le lieu de départ
         currentRoom = bedroom;
 
@@ -62,8 +67,22 @@ public class Game
      */
     public void update()
     {
-        // Décrire le lieu
+        // Décrit le lieu
         System.out.println("You are in the " + currentRoom.getName() + ".");
+        // Affiche la liste des directions possibles
+        for (Map.Entry<Direction, Room> entry : currentRoom.getConnectedRooms().entrySet()) {
+            System.out.println(entry.getKey().getName() + " is the " + entry.getValue().getName() + ".");
+        }
+        // Affiche la liste des objets interactif diposnibles
+        if (currentRoom.getItems().isEmpty()) {
+            System.out.println("No visible items.");
+        } else {
+            System.out.println("Visible items:");
+            for (Item item : currentRoom.getItems()) {
+                System.out.println("* " + item.getName());
+            }
+        }
+
         // Attendre une saisie de l'utilisateur
         String userInput = scanner.nextLine();
         // Vérifier la saisie de l'utilisateur
