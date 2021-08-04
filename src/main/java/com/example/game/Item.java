@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.game.command.Command;
+import com.example.game.effect.Effect;
 
 /**
  * Represents an interactive item in the universe
@@ -21,7 +22,7 @@ public class Item
     /**
      * List of all effects associated with the required command
      */
-    private Map<Command, String> effects;
+    private Map<Command, Effect> effects;
     
     /**
      * Create new item
@@ -43,7 +44,7 @@ public class Item
      * @param command
      * @return
      */
-    public String getEffect(Command command)
+    public Effect getEffect(Command command)
     {
         return effects.get(command);
     }
@@ -53,9 +54,9 @@ public class Item
      * @param command
      * @param message
      */
-    public void addEffect(Command command, String message)
+    public void addEffect(Command command, Effect effect)
     {
-        effects.put(command, message);
+        effects.put(command, effect);
     }
 
     public String getName() {

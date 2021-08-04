@@ -7,6 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.game.command.Command;
+import com.example.game.effect.Effect;
+import com.example.game.effect.MessageEffect;
+import com.example.game.effect.RemoveItemEffect;
 
 /**
  * Represents a game played by the user
@@ -65,15 +68,18 @@ public class Game
         Item bed = new Item(bedroom, "bed");
         Item desk = new Item(bedroom, "desk");
         Item pen = new Item(bedroom, "pen");
+        Item cookie = new Item(bathroom, "cookie");
 
         Command open = new Command("open", "This does not seem to open.");
         Command pickUp = new Command("pick up", "You don't want to carry this.");
         Command use = new Command("use", "You have no idea how to use this.");
-        commands = new Command[] { open, pickUp, use };
+        Command eat = new Command("eat", "This does not seem edible...");
+        commands = new Command[] { eat, open, pickUp, use };
 
-        bed.addEffect(use, "You take a quick nap. You feel refreshed!");
-        desk.addEffect(open, "Your desk's drawers are crammed full of papers.");
-        pen.addEffect(pickUp, "You picked up the pen.");
+        bed.addEffect(use, new MessageEffect("You take a quick nap. You feel refreshed!"));
+        desk.addEffect(open, new MessageEffect("Your desk's drawers are crammed full of papers."));
+        pen.addEffect(pickUp, new MessageEffect("You picked up the pen."));
+        cookie.addEffect(eat, new RemoveItemEffect(cookie));
 
         // Choisit le lieu de départ
         currentRoom = bedroom;
@@ -138,13 +144,14 @@ public class Game
                 String itemName = matcher.group(1);
                 for (Item item : currentRoom.getItems()) {
                     if (itemName.equals(item.getName())) {
-                        // Si une correspondance a été trouvée, récupère le message associé à la commande désirée dans l'objet
-                        String message = item.getEffect(command);
-                        // Si aucun message n'a été prévu, affiche le message par défaut de la commande
-                        if (message == null) {
+                        // Si une correspondance a été trouvée, récupère l'effet associé à la commande désirée dans l'objet
+                        Effect effect = item.getEffect(command);
+                        // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
+                        if (effect == null) {
                             System.out.println(command.getDefaultMessage());
+                        // Sinon, déclenche l'effet
                         } else {
-                            System.out.println(message);
+                            effect.trigger();
                         }
                         return;
                     }
