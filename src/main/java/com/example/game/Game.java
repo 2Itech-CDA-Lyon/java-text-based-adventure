@@ -2,6 +2,11 @@ package com.example.game;
 
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.example.game.command.Command;
 
 /**
  * Represents a game played by the user
@@ -24,6 +29,10 @@ public class Game
      * The room the player is currently in
      */
     private Room currentRoom;
+    /**
+     * List of all existing commands
+     */
+    private Command[] commands;
 
     /**
      * Create new game
@@ -55,6 +64,16 @@ public class Game
 
         Item bed = new Item(bedroom, "bed");
         Item desk = new Item(bedroom, "desk");
+        Item pen = new Item(bedroom, "pen");
+
+        Command open = new Command("open", "This does not seem to open.");
+        Command pickUp = new Command("pick up", "You don't want to carry this.");
+        Command use = new Command("use", "You have no idea how to use this.");
+        commands = new Command[] { open, pickUp, use };
+
+        bed.addEffect(use, "You take a quick nap. You feel refreshed!");
+        desk.addEffect(open, "Your desk's drawers are crammed full of papers.");
+        pen.addEffect(pickUp, "You picked up the pen.");
 
         // Choisit le lieu de départ
         currentRoom = bedroom;
@@ -68,6 +87,7 @@ public class Game
     public void update()
     {
         // Décrit le lieu
+        System.out.println("");
         System.out.println("You are in the " + currentRoom.getName() + ".");
         // Affiche la liste des directions possibles
         for (Map.Entry<Direction, Room> entry : currentRoom.getConnectedRooms().entrySet()) {
@@ -84,6 +104,7 @@ public class Game
         }
 
         // Attendre une saisie de l'utilisateur
+        System.out.print("> ");
         String userInput = scanner.nextLine();
         // Vérifier la saisie de l'utilisateur
         if ("exit".equals(userInput)) {
@@ -106,7 +127,35 @@ public class Game
                 return;
             }
         }
-        // Si aucune correspondance avec une direction n'a été trouvée, c'est donc que la commande est invalide
+
+        // Cherche parmi toutes les commandes existantes, à laquelle correspond la saisie de l'utilisateur
+        for (Command command : commands) {
+            // Cherche une correspondance entre la commande et la saisie de l'utilisateur
+            Pattern pattern = Pattern.compile("^" + command.getCommand() + "\\s(.+)$");
+            Matcher matcher = pattern.matcher(userInput);
+            if (matcher.find()) {
+                // Cherche une correspondance avec les objets présents dans le lieu
+                String itemName = matcher.group(1);
+                for (Item item : currentRoom.getItems()) {
+                    if (itemName.equals(item.getName())) {
+                        // Si une correspondance a été trouvée, récupère le message associé à la commande désirée dans l'objet
+                        String message = item.getEffect(command);
+                        // Si aucun message n'a été prévu, affiche le message par défaut de la commande
+                        if (message == null) {
+                            System.out.println(command.getDefaultMessage());
+                        } else {
+                            System.out.println(message);
+                        }
+                        return;
+                    }
+                }
+                // Si le nom d'objet entré par l'utilisateur ne correspond à aucun objet présent dans le lieu
+                System.out.println("There is no such object here!");
+                return;
+            }
+        }
+
+        // Si aucune correspondance n'a été trouvée, c'est donc que la commande est invalide
         System.out.println("Invalid command!");
     }
 

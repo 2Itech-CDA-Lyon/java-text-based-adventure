@@ -1,5 +1,10 @@
 package com.example.game;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.example.game.command.Command;
+
 /**
  * Represents an interactive item in the universe
  */
@@ -13,6 +18,10 @@ public class Item
      * The room in which the item can be found
      */
     private Room room;
+    /**
+     * List of all effects associated with the required command
+     */
+    private Map<Command, String> effects;
     
     /**
      * Create new item
@@ -25,6 +34,28 @@ public class Item
         this.name = name;
 
         room.addItem(this);
+
+        effects = new HashMap<>();
+    }
+
+    /**
+     * Get effect mapped to given command
+     * @param command
+     * @return
+     */
+    public String getEffect(Command command)
+    {
+        return effects.get(command);
+    }
+
+    /**
+     * Map an effect to a command
+     * @param command
+     * @param message
+     */
+    public void addEffect(Command command, String message)
+    {
+        effects.put(command, message);
     }
 
     public String getName() {
