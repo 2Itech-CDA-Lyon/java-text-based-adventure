@@ -127,3 +127,19 @@ Implémenter une ou plusieurs des classes suivantes:
 - Toucher une prise électrique (`touch plug`) doit produire la mort du héros, et donc la fin de la partie.
 
 Si le bonus de l'étape 3 a été réalisé, chaque interaction doit être accompagnée d'au moins un message décrivant l'effet obtenu.
+
+## Mission 3: gestion d'états
+
+Nous avons presque tout ce qu'il faut pour faire un véritable jeu avec des éléments à débloquer au fur et à mesure. Néanmoins, il manque actuellement des états à nos éléments; c'est-à-dire que chaque élément posséde uniquement les propriétés qui lui ont été attribuées à la création du jeu, et qu'il n'a pas de propriété qui a vocation à être modifiée en cours de jeu.
+
+### 1. Ajouter des états
+
+Créer des classes **BooleanState**, **NumberState**, **StringState**… capables de contenir une valeur de chaque type. Chaque élément du jeu (**Item**) doit pouvoir avoir une série d'états (par exemple, pour une fenêtre: ouvert/fermé, pour un appareil à piles: le nombre de fois qu'il a été utilisé, pour un personnage: "inconnu" tant qu'on n'a pas appris son vrai nom…).
+
+### 2. Manipuler les états
+
+Créer des classes d'effets permettant de modifier la valeur d'un état précis. Ainsi, lorsque l'on utilise une commande sur un élément, l'un des effets possibles doit être de modifier un état (de l'élément qui a répondu à la commande, ou d'une autre).
+
+### 3. Créer une classe d'état générique
+
+Comme les différentes classes d'état ont le même fonctionnement, hormis le type de valeur qu'ils contiennent, les refactoriser sous forme d'une seule [classe générique](https://docs.oracle.com/javase/tutorial/java/generics/types.html), et adapter les autres classes en conséquence.
