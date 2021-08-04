@@ -69,6 +69,7 @@ public class Game
         // Vérifier la saisie de l'utilisateur
         if ("exit".equals(userInput)) {
             terminate();
+            return;
         }
 
         // Cherche parmi toutes les directions existantes, à laquelle correspond la saisie de l'utilisateur 
