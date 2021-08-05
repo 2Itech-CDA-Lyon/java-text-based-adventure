@@ -9,11 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.game.command.Command;
+import com.example.game.effect.ChangeBooleanStateEffect;
 import com.example.game.effect.Effect;
 import com.example.game.effect.EndGameEffect;
 import com.example.game.effect.MessageEffect;
 import com.example.game.effect.RemoveItemEffect;
 import com.example.game.effect.RenameItemEffect;
+import com.example.game.state.BooleanState;
 
 /**
  * Represents a game played by the user
@@ -72,15 +74,19 @@ public class Game
         Item bed = new Item(bedroom, "bed");
         Item desk = new Item(bedroom, "desk");
         Item pen = new Item(bedroom, "pen");
+        Item window = new Item(bedroom, "window");
         Item cookie = new Item(bathroom, "cookie");
         Item plug = new Item(bathroom, "plug");
 
+        BooleanState windowOpen = new BooleanState(window, "open", false);
+
+        Command close = new Command("close", "This does not seem to close.");
         Command open = new Command("open", "This does not seem to open.");
         Command pickUp = new Command("pick up", "You don't want to carry this.");
         Command use = new Command("use", "You have no idea how to use this.");
         Command eat = new Command("eat", "This does not seem edible...");
         Command touch = new Command("touch", "It has no special feeling to it.");
-        commands = new Command[] { eat, open, pickUp, use, touch };
+        commands = new Command[] { close, eat, open, pickUp, use, touch };
 
         bed.addEffects(use, Arrays.<Effect>asList(
             new MessageEffect("You take a quick nap. You feel refreshed!")
@@ -90,7 +96,16 @@ public class Game
             new RenameItemEffect(desk, "empty desk")
         ));
         pen.addEffects(pickUp, Arrays.<Effect>asList(
+            new RemoveItemEffect(pen),
             new MessageEffect("You picked up the pen.")
+        ));
+        window.addEffects(open, Arrays.<Effect>asList(
+            new ChangeBooleanStateEffect(windowOpen, true),
+            new MessageEffect("The window is now open.")
+        ));
+        window.addEffects(close, Arrays.<Effect>asList(
+            new ChangeBooleanStateEffect(windowOpen, false),
+            new MessageEffect("The window is now closed.")
         ));
         cookie.addEffects(eat, Arrays.<Effect>asList(
             new RemoveItemEffect(cookie),
