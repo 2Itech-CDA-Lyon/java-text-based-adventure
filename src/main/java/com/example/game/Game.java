@@ -1,6 +1,5 @@
 package com.example.game;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.game.command.Command;
-import com.example.game.effect.ChangeBooleanStateEffect;
+import com.example.game.effect.ChangeStateEffect;
 import com.example.game.effect.Effect;
 import com.example.game.effect.EndGameEffect;
 import com.example.game.effect.MessageEffect;
 import com.example.game.effect.RemoveItemEffect;
 import com.example.game.effect.RenameItemEffect;
-import com.example.game.state.BooleanState;
+import com.example.game.state.State;
 
 /**
  * Represents a game played by the user
@@ -78,7 +77,7 @@ public class Game
         Item cookie = new Item(bathroom, "cookie");
         Item plug = new Item(bathroom, "plug");
 
-        BooleanState windowOpen = new BooleanState(window, "open", false);
+        State<Boolean> windowOpen = new State<Boolean>(window, "open", false);
 
         Command close = new Command("close", "This does not seem to close.");
         Command open = new Command("open", "This does not seem to open.");
@@ -100,11 +99,11 @@ public class Game
             new MessageEffect("You picked up the pen.")
         ));
         window.addEffects(open, Arrays.<Effect>asList(
-            new ChangeBooleanStateEffect(windowOpen, true),
+            new ChangeStateEffect<Boolean>(windowOpen, true),
             new MessageEffect("The window is now open.")
         ));
         window.addEffects(close, Arrays.<Effect>asList(
-            new ChangeBooleanStateEffect(windowOpen, false),
+            new ChangeStateEffect<Boolean>(windowOpen, false),
             new MessageEffect("The window is now closed.")
         ));
         cookie.addEffects(eat, Arrays.<Effect>asList(

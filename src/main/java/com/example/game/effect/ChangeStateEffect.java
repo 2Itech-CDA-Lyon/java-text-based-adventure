@@ -1,27 +1,27 @@
 package com.example.game.effect;
 
-import com.example.game.state.BooleanState;
+import com.example.game.state.State;
 
 /**
  * Represents an effect that produces a state change
  */
-public class ChangeBooleanStateEffect implements Effect
+public class ChangeStateEffect<T> implements Effect
 {
     /**
      * The state whose value to change
      */
-    private boolean newValue;
+    private T newValue;
     /**
      * The new value to assign the state
      */
-    private BooleanState state;
+    private State<T> state;
 
     /**
      * Create new boolean state change effect
      * @param state The new value to assign the state
      * @param newValue The state whose value to change
      */
-    public ChangeBooleanStateEffect(BooleanState state, boolean newValue)
+    public ChangeStateEffect(State<T> state, T newValue)
     {
         this.state = state;
         this.newValue = newValue;

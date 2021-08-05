@@ -3,18 +3,18 @@ package com.example.game.state;
 import com.example.game.Item;
 
 /**
- * Represents a state that can be either true or false
+ * Represents a state
  */
-public class BooleanState
+public class State<T>
 {
     /**
      * The state's default value
      */
-    private boolean defaultValue;
+    private T defaultValue;
     /**
      * The state's value
      */
-    private boolean value;
+    private T value;
     /**
      * The state's name
      */
@@ -30,7 +30,7 @@ public class BooleanState
      * @param name The state's name
      * @param defaultValue The state's default value
      */
-    public BooleanState(Item item, String name, boolean defaultValue)
+    public State(Item item, String name, T defaultValue)
     {
         this.item = item;
         this.name = name;
@@ -46,15 +46,15 @@ public class BooleanState
         value = defaultValue;
     }
 
-    public boolean getDefaultValue() {
+    public T getDefaultValue() {
         return defaultValue;
     }
 
-    public boolean getValue() {
+    public T getValue() {
         return value;
     }
 
-    public void setValue(boolean value) {
+    public void setValue(T value) {
         this.value = value;
     }
 
