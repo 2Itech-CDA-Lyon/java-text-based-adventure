@@ -1,6 +1,7 @@
 package com.example.game;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.example.game.command.Command;
@@ -22,7 +23,7 @@ public class Item
     /**
      * List of all effects associated with the required command
      */
-    private Map<Command, Effect> effects;
+    private Map<Command, List<Effect>> effects;
     
     /**
      * Create new item
@@ -40,11 +41,11 @@ public class Item
     }
 
     /**
-     * Get effect mapped to given command
+     * Get effects mapped to given command
      * @param command
      * @return
      */
-    public Effect getEffect(Command command)
+    public List<Effect> getEffects(Command command)
     {
         return effects.get(command);
     }
@@ -54,9 +55,9 @@ public class Item
      * @param command
      * @param message
      */
-    public void addEffect(Command command, Effect effect)
+    public void addEffects(Command command, List<Effect> effects)
     {
-        effects.put(command, effect);
+        this.effects.put(command, effects);
     }
 
     public String getName() {

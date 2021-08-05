@@ -1,8 +1,10 @@
 package com.example.game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,10 +78,19 @@ public class Game
         Command eat = new Command("eat", "This does not seem edible...");
         commands = new Command[] { eat, open, pickUp, use };
 
-        bed.addEffect(use, new MessageEffect("You take a quick nap. You feel refreshed!"));
-        desk.addEffect(open, new MessageEffect("Your desk's drawers are crammed full of papers."));
-        pen.addEffect(pickUp, new MessageEffect("You picked up the pen."));
-        cookie.addEffect(eat, new RemoveItemEffect(cookie));
+        bed.addEffects(use, Arrays.<Effect>asList(
+            new MessageEffect("You take a quick nap. You feel refreshed!")
+        ));
+        desk.addEffects(open, Arrays.<Effect>asList(
+            new MessageEffect("Your desk's drawers are crammed full of papers.")
+        ));
+        pen.addEffects(pickUp, Arrays.<Effect>asList(
+            new MessageEffect("You picked up the pen.")
+        ));
+        cookie.addEffects(eat, Arrays.<Effect>asList(
+            new RemoveItemEffect(cookie),
+            new MessageEffect("You ate the cookie. Delicious!")
+        ));
 
         // Choisit le lieu de départ
         currentRoom = bedroom;
@@ -144,14 +155,16 @@ public class Game
                 String itemName = matcher.group(1);
                 for (Item item : currentRoom.getItems()) {
                     if (itemName.equals(item.getName())) {
-                        // Si une correspondance a été trouvée, récupère l'effet associé à la commande désirée dans l'objet
-                        Effect effect = item.getEffect(command);
+                        // Si une correspondance a été trouvée, récupère les effets associés à la commande désirée dans l'objet
+                        List<Effect> effects = item.getEffects(command);
                         // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
-                        if (effect == null) {
+                        if (effects == null) {
                             System.out.println(command.getDefaultMessage());
-                        // Sinon, déclenche l'effet
+                        // Sinon, déclenche les effets les uns après les autres
                         } else {
-                            effect.trigger();
+                            for (Effect effect : effects) {
+                                effect.trigger();
+                            }
                         }
                         return;
                     }
