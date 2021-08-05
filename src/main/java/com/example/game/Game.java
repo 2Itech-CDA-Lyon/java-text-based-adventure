@@ -10,8 +10,10 @@ import java.util.regex.Pattern;
 
 import com.example.game.command.Command;
 import com.example.game.effect.Effect;
+import com.example.game.effect.EndGameEffect;
 import com.example.game.effect.MessageEffect;
 import com.example.game.effect.RemoveItemEffect;
+import com.example.game.effect.RenameItemEffect;
 
 /**
  * Represents a game played by the user
@@ -71,18 +73,21 @@ public class Game
         Item desk = new Item(bedroom, "desk");
         Item pen = new Item(bedroom, "pen");
         Item cookie = new Item(bathroom, "cookie");
+        Item plug = new Item(bathroom, "plug");
 
         Command open = new Command("open", "This does not seem to open.");
         Command pickUp = new Command("pick up", "You don't want to carry this.");
         Command use = new Command("use", "You have no idea how to use this.");
         Command eat = new Command("eat", "This does not seem edible...");
-        commands = new Command[] { eat, open, pickUp, use };
+        Command touch = new Command("touch", "It has no special feeling to it.");
+        commands = new Command[] { eat, open, pickUp, use, touch };
 
         bed.addEffects(use, Arrays.<Effect>asList(
             new MessageEffect("You take a quick nap. You feel refreshed!")
         ));
         desk.addEffects(open, Arrays.<Effect>asList(
-            new MessageEffect("Your desk's drawers are crammed full of papers.")
+            new MessageEffect("The desk's drawers are desperately empty."),
+            new RenameItemEffect(desk, "empty desk")
         ));
         pen.addEffects(pickUp, Arrays.<Effect>asList(
             new MessageEffect("You picked up the pen.")
@@ -90,6 +95,10 @@ public class Game
         cookie.addEffects(eat, Arrays.<Effect>asList(
             new RemoveItemEffect(cookie),
             new MessageEffect("You ate the cookie. Delicious!")
+        ));
+        plug.addEffects(touch, Arrays.<Effect>asList(
+            new MessageEffect("You electrocuted yourself!"),
+            new EndGameEffect(this)
         ));
 
         // Choisit le lieu de départ
@@ -191,7 +200,7 @@ public class Game
     /**
      * Terminate game
      */
-    private void terminate()
+    public void terminate()
     {
         isRunning = false;
         scanner.close();
