@@ -143,3 +143,48 @@ Créer des classes d'effets permettant de modifier la valeur d'un état précis.
 ### 3. Créer une classe d'état générique
 
 Comme les différentes classes d'état ont le même fonctionnement, hormis le type de valeur qu'ils contiennent, les refactoriser sous forme d'une seule [classe générique](https://docs.oracle.com/javase/tutorial/java/generics/types.html), et adapter les autres classes en conséquence.
+
+## ☕ Pause refactorisation
+
+### Rendre les commandes autonomes
+
+N'est-ce pas en réalité la responsabilité de chaque commande de déterminer si une saisie de l'utilisateur lui correspond?
+
+<details>
+<summary>Spoiler</summary>
+Oui!
+</details>
+
+Implémenter une méthode _**String** match(**String** userInput)_ dans la classe **Command**. Cette méthode doit examiner la saisie utilisateur passée en paramètre et renvoyer:
+
+- le reste de la saisie (le texte qui suit la commande) en cas de correspondance;
+- ou **null** si la saisie ne correspond pas à la commande.
+
+### Unifier les commandes
+
+Après tout, les directions sont aussi des commandes, non?
+
+<details>
+<summary>Spoiler</summary>
+Oui!
+</details>
+
+Implémenter une classe **StandAloneCommand** capable de produire une correspondance avec le nom de la commande (sans argument), et une classe **ArgumentCommand** capable de produire une correspondance avec le nom de la commande suivi d'autre chose. Les directions doivent être un cas particulier de **StandAloneCommand**. Les commandes qui permettent d'interagir avec les objets doivent être des **ArgumentCommand**.
+
+### Unifier les commandes (bis)
+
+Finalement, changer de lieu n'est jamais qu'un effet associé à une commande comme un autre, pas vrai?
+
+<details>
+<summary>Spoiler</summary>
+Oui!
+</details>
+
+Implémenter une classe **ChangeRoomEffect** permettant de produire le changement de lieu lors de son déclenchement. Puis, implémenter une méthode _**List<Effect>** getEffects()_ dans la classe **StandAloneCommand** capable de renvoyer une liste contenant au moins un objet **ChangeRoomEffect**.
+
+## 🤔 Pour se prendre la tête en attendant la prochaine fois…
+
+- Comment pourrait-on implémenter des structures de contrôle (conditions, boucles…) dans les effets associés aux différentes commandes? Et comment pourrait-on les intercaler dans les listes d'effets existantes?
+- Comment pourrait-on implémenter des changements d'état relatifs (c'est-à-dire, qui se basent sur la valeur actuelle de l'état au lieu de le remplacer complètement par une nouvelle valeur)? Par exemple, ajouter 1 ou retirer 1 à la valeur actuelle, au lieu de la remplacer par 1.
+- Comment pourrait-on implémenter des opérateurs spécifiques à chaque type d'état? Par exemple, des opérateurs logiques (&&, ||, ...) pour les valeurs booléennes, des opérateurs arithmétiques (+, -, ...) pour les nombres, etc. Et ce, idéalement en conservant la classe générique **State<T>**?
+- Comment pourrait-on sauvegarder une partie afin que l'état du jeu ne soit pas perdu lorsqu'on quitte l'application, et qu'on puisse le retrouver plus tard? Où et comment les informations de chaque partie pourraient-elles être stockées?
