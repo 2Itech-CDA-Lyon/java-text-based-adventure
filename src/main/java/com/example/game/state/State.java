@@ -36,6 +36,8 @@ public class State<T>
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
+
+        item.addState(this);
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.example.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.example.game.command.Command;
 import com.example.game.effect.Effect;
+import com.example.game.state.State;
 
 /**
  * Represents an interactive item in the universe
@@ -24,6 +26,10 @@ public class Item
      * List of all effects associated with the required command
      */
     private Map<Command, List<Effect>> effects;
+    /**
+     * List of all states applying to the item
+     */
+    private List<State<?>> states;
     
     /**
      * Create new item
@@ -38,6 +44,7 @@ public class Item
         room.addItem(this);
 
         effects = new HashMap<>();
+        states = new ArrayList<>();
     }
 
     /**
@@ -70,5 +77,31 @@ public class Item
 
     public Room getRoom() {
         return room;
+    }
+
+    public void setRoom(Room newRoom)
+    {
+        if (room != null) {
+            room.removeItem(this);
+        }
+        if (newRoom != null) {
+            newRoom.addItem(this);
+        }
+        room = newRoom;
+    }
+
+    public List<State<?>> getStates()
+    {
+        return states;
+    }
+
+    public void addState(State<?> state)
+    {
+        states.add(state);
+    }
+
+    public void removeState(State<?> state)
+    {
+        states.remove(state);
     }
 }

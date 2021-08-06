@@ -35,7 +35,6 @@ public class RemoveItemEffect implements Effect
      */
     public void trigger()
     {
-        // FIXME: Add setter in Item class
-        item.getRoom().removeItem(item);
+        item.setRoom(null);
     }
 }
