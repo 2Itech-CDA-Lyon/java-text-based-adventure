@@ -56,6 +56,21 @@ public class Room
     }
 
     /**
+     * Find item with the current name inside the room
+     * @param itemName The name of the item to be searched
+     * @return The item if it was found, null otherwise
+     */
+    public Item findItemByName(String itemName)
+    {
+        for (Item item : items) {
+            if (itemName.equals(item.getName())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get room name
      * @return
      */

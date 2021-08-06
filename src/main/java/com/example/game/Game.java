@@ -170,30 +170,20 @@ public class Game
 
         // Cherche parmi toutes les commandes existantes, à laquelle correspond la saisie de l'utilisateur
         for (Command command : commands) {
-            // Cherche une correspondance entre la commande et la saisie de l'utilisateur
-            Pattern pattern = Pattern.compile("^" + command.getCommand() + "\\s(.+)$");
-            Matcher matcher = pattern.matcher(userInput);
-            if (matcher.find()) {
-                // Cherche une correspondance avec les objets présents dans le lieu
-                String itemName = matcher.group(1);
-                for (Item item : currentRoom.getItems()) {
-                    if (itemName.equals(item.getName())) {
-                        // Si une correspondance a été trouvée, récupère les effets associés à la commande désirée dans l'objet
-                        List<Effect> effects = item.getEffects(command);
-                        // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
-                        if (effects == null) {
-                            System.out.println(command.getDefaultMessage());
-                        // Sinon, déclenche les effets les uns après les autres
-                        } else {
-                            for (Effect effect : effects) {
-                                effect.trigger();
-                            }
-                        }
-                        return;
-                    }
-                }
+            // Charge la commande de déterminer si la saisie utilisateur lui correspond
+            // et récupère le nom de l'élément à laquelle la commande s'applique le cas échéant
+            String itemName = command.match(userInput);
+            // Si la commande correspond à la saisie utilisateur
+            if (itemName != null) {
+                // Charge le lieu de déterminer si un élément avec le nom spécifié dans la commande existe
+                Item item = currentRoom.findItemByName(itemName);
                 // Si le nom d'objet entré par l'utilisateur ne correspond à aucun objet présent dans le lieu
-                System.out.println("There is no such object here!");
+                if (item == null) {
+                    System.out.println("There is no such object here!");
+                    return;
+                }
+                // Sinon, charge l'élément de déclencher les effets associés à la commande saisie                
+                item.triggerEffects(command);
                 return;
             }
         }

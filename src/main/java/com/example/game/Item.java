@@ -67,6 +67,24 @@ public class Item
         this.effects.put(command, effects);
     }
 
+    /**
+     * Trigger the list of effects associated with the given command
+     * @param command The desired command
+     */
+    public void triggerEffects(Command command)
+    {
+        List<Effect> effects = getEffects(command);
+        // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
+        if (effects == null) {
+            System.out.println(command.getDefaultMessage());
+        // Sinon, déclenche les effets les uns après les autres
+        } else {
+            for (Effect effect : effects) {
+                effect.trigger();
+            }
+        }
+    }
+
     public String getName() {
         return name;
     }
