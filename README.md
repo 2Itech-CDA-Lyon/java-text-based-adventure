@@ -188,3 +188,19 @@ Implémenter une classe **ChangeRoomEffect** permettant de produire le changemen
 - Comment pourrait-on implémenter des changements d'état relatifs (c'est-à-dire, qui se basent sur la valeur actuelle de l'état au lieu de le remplacer complètement par une nouvelle valeur)? Par exemple, ajouter 1 ou retirer 1 à la valeur actuelle, au lieu de la remplacer par 1.
 - Comment pourrait-on implémenter des opérateurs spécifiques à chaque type d'état? Par exemple, des opérateurs logiques (&&, ||, ...) pour les valeurs booléennes, des opérateurs arithmétiques (+, -, ...) pour les nombres, etc. Et ce, idéalement en conservant la classe générique **State<T>**?
 - Comment pourrait-on sauvegarder une partie afin que l'état du jeu ne soit pas perdu lorsqu'on quitte l'application, et qu'on puisse le retrouver plus tard? Où et comment les informations de chaque partie pourraient-elles être stockées?
+
+## Mission 4: créer la base de données
+
+Plutôt que de créer manuellement les éléments de l'univers dans la méthode **setup()** de **Game**, il serait intéressant de pouvoir les créer automatiquement à partir du contenu d'une base de données.
+
+- Créer le schéma de base de données à l'aide d'un outil de gestion de base de données (PHPMyAdmin, Adminer…) en se basant sur le diagramme de classes de l'application: https://lucid.app/lucidchart/invitations/accept/inv_3e03fc78-d8a0-4e71-adce-ec3aa38b10eb?viewport_loc=-384%2C-21%2C1985%2C851%2C0_0
+- Peupler la base de données avec les exemples actuellement présents dans le code Java.
+- Écrire les requêtes SQL permettant de répondre aux opérations exécutées par l'application (partant d'un lieu A et empruntant une direction B, dans quel lieu doit-on arriver? connaissant un élément A et une commande B, quels effets cela doit-il produire? etc…)
+
+## Mission 5: lire la base de données
+
+Maintenant que la base de données est créée, il faut adapter le code Java afin de faire correspondre les classes aux tables.
+
+- Ajouter Hibernate comme dépendance à l'application.
+- Adapter le code des modéles afin de configurer Hibernate correctement.
+- Écrire des méthodes permettant de récupérer un élément de la base de données en fonction de son identifiant, et vérifier qu'elles fonctionnent correctement.
