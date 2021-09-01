@@ -1,11 +1,8 @@
 package com.example.game;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.example.game.command.Command;
 import com.example.game.effect.ChangeStateEffect;
@@ -55,6 +52,8 @@ public class Game
      */
     public void setup()
     {
+        Room room = Room.getById(1);
+
         // Crée les éléments de l'univers
         Direction east = new Direction("east", "East");
         Direction south = new Direction("south", "South");

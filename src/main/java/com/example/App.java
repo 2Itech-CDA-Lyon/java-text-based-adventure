@@ -7,7 +7,7 @@ import com.example.game.Game;
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
         // Crée une nouvelle partie
         Game game = new Game();

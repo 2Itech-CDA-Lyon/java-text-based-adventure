@@ -5,23 +5,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.*;
+
 /**
  * Represents a place the player can visit
  */
+@Entity
+@Table(name = "rooms")
 public class Room
 {
     /**
+     * Database identifier
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    /**
      * Room name
      */
+    @Column(name = "name")
     private String name;
     /**
      * List of all connected rooms associated with the direction from this room
      */
+    @Transient
     private Map<Direction, Room> connectedRooms;
     /**
      * List of all items present in the room
      */
+    @Transient
     private List<Item> items;
+
+    public static Room getById(Integer id)
+    {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("TextBasedAdventure");
+        EntityManager entityManager = factory.createEntityManager();
+        return entityManager.find(Room.class, id);
+    }
+
+    public Room()
+    {
+
+    }
 
     /**
      * Create new room
