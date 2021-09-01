@@ -1,35 +1,55 @@
-package com.example.game;
+package com.example.entity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.example.game.command.Command;
-import com.example.game.effect.Effect;
-import com.example.game.state.State;
+import javax.persistence.*;
+
+import com.example.entity.effect.AbstractEffect;
+import com.example.entity.state.State;
+import com.example.interfaces.Effect;
 
 /**
  * Represents an interactive item in the universe
  */
+@Entity
+@Table(name = "items")
 public class Item
 {
     /**
+     * Database identifier
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    /**
      * Item name
      */
+    @Column(name = "name")
     private String name;
     /**
      * The room in which the item can be found
      */
+    @ManyToOne
+    @JoinColumn(name = "room_id")
     private Room room;
     /**
-     * List of all effects associated with the required command
+     * List of all effects associated with the item
      */
-    private Map<Command, List<Effect>> effects;
+    @OneToMany
+    @JoinColumn(name = "item_id")
+    private List<AbstractEffect> effects;
     /**
      * List of all states applying to the item
      */
+    @Transient
     private List<State<?>> states;
+
+    public Item()
+    {
+
+    }
     
     /**
      * Create new item
@@ -43,28 +63,8 @@ public class Item
 
         room.addItem(this);
 
-        effects = new HashMap<>();
+        effects = new ArrayList<>();
         states = new ArrayList<>();
-    }
-
-    /**
-     * Get effects mapped to given command
-     * @param command
-     * @return
-     */
-    public List<Effect> getEffects(Command command)
-    {
-        return effects.get(command);
-    }
-
-    /**
-     * Map an effect to a command
-     * @param command
-     * @param message
-     */
-    public void addEffects(Command command, List<Effect> effects)
-    {
-        this.effects.put(command, effects);
     }
 
     /**
@@ -73,7 +73,8 @@ public class Item
      */
     public void triggerEffects(Command command)
     {
-        List<Effect> effects = getEffects(command);
+        // List<Effect> effects = getEffects(command);
+        effects = new ArrayList<>();
         // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
         if (effects == null) {
             System.out.println(command.getDefaultMessage());

@@ -1,4 +1,4 @@
-package com.example.game;
+package com.example.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,14 +27,22 @@ public class Room
     @Column(name = "name")
     private String name;
     /**
-     * List of all connected rooms associated with the direction from this room
+     * List of all room connections starting from this room
      */
-    @Transient
-    private Map<Direction, Room> connectedRooms;
+    @OneToMany
+    @JoinColumn(name = "from_room_id")
+    private List<RoomConnection> connectionsFrom;
+    /**
+     * List of all room connections targeting this room
+     */
+    @OneToMany
+    @JoinColumn(name = "to_room_id")
+    private List<RoomConnection> connectionsTo;
     /**
      * List of all items present in the room
      */
-    @Transient
+    @OneToMany
+    @JoinColumn(name = "room_id")
     private List<Item> items;
 
     public static Room getById(Integer id)
@@ -55,7 +63,7 @@ public class Room
      */
     public Room(String name)
     {
-        connectedRooms = new HashMap<Direction, Room>();
+        // connectedRooms = new HashMap<Direction, Room>();
         items = new ArrayList<Item>();
 
         this.name = name;
@@ -68,7 +76,8 @@ public class Room
      */
     public Room getRoomInDirection(Direction direction)
     {
-        return connectedRooms.get(direction);
+        // return connectedRooms.get(direction);
+        return null;
     }
 
     /**
@@ -78,7 +87,7 @@ public class Room
      */
     public void setRoomInDirection(Direction direction, Room targetRoom)
     {
-        connectedRooms.put(direction, targetRoom);
+        // connectedRooms.put(direction, targetRoom);
     }
 
     /**
@@ -114,13 +123,24 @@ public class Room
         return items;
     }
 
+    public List<RoomConnection> getConnectionsFrom()
+    {
+        return connectionsFrom;
+    }
+
+    public List<RoomConnection> getConnectionsTo()
+    {
+        return connectionsTo;
+    }
+
     /**
      * Get all connected rooms with their associated directions
      * @return
      */
     public Map<Direction, Room> getConnectedRooms()
     {
-        return connectedRooms;
+        // return connectedRooms;
+        return null;
     }
 
     /**

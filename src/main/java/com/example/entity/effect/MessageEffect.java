@@ -1,14 +1,24 @@
-package com.example.game.effect;
+package com.example.entity.effect;
+
+import javax.persistence.*;
 
 /**
  * Represents an effect that produces a message display in the console
  */
-public class MessageEffect implements Effect
+@Entity
+@DiscriminatorValue("Message")
+public class MessageEffect extends AbstractEffect
 {
     /**
      * The message to display
      */
+    @Column(name = "message")
     private String message;
+
+    public MessageEffect()
+    {
+
+    }
 
     /**
      * Create new message effect

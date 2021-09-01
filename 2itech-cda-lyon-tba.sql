@@ -20,7 +20,8 @@ CREATE TABLE `commands` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `commands` (`id`, `command`, `default_message`) VALUES
-(1,	'open',	'This doesn\'t seem to open.');
+(1,	'open',	'This doesn\'t seem to open.'),
+(2,	'eat',	'This is not edible!');
 
 DROP TABLE IF EXISTS `directions`;
 CREATE TABLE `directions` (
@@ -48,7 +49,8 @@ CREATE TABLE `items` (
 
 INSERT INTO `items` (`id`, `name`, `room_id`) VALUES
 (1,	'bed',	1),
-(2,	'window',	1);
+(2,	'window',	1),
+(3, 'cookie', 4);
 
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
@@ -60,7 +62,8 @@ CREATE TABLE `rooms` (
 INSERT INTO `rooms` (`id`, `name`) VALUES
 (1,	'bedroom'),
 (2,	'bathroom'),
-(3,	'corridor');
+(3,	'corridor'),
+(4, 'kitchen');
 
 DROP TABLE IF EXISTS `room_connections`;
 CREATE TABLE `room_connections` (
@@ -79,9 +82,11 @@ CREATE TABLE `room_connections` (
 
 INSERT INTO `room_connections` (`id`, `from_room_id`, `to_room_id`, `direction_id`) VALUES
 (1,	1,	2,	3),
-(4,	1,	3,	4),
-(5,	2,	1,	1),
-(6,	3,	2,	1);
+(2,	1,	3,	4),
+(3,	2,	1,	1),
+(4,	3,	1,	2),
+(5, 3,  4,  1),
+(6, 4,  3,  3);
 
 DROP TABLE IF EXISTS `states`;
 CREATE TABLE `states` (
@@ -121,6 +126,8 @@ CREATE TABLE `effects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `effects` (`effect_type`, `id`, `item_id`, `_order`, `command_id`, `new_name`, `target_item_id`, `message`) VALUES
-('Message',	1,	2,	0,	1,	NULL,	NULL,	'The window is now open.');
+('Message',	1,	2,	0,	1,	NULL,	NULL,	'The window is now open.'),
+('RemoveItem',	2,	3,	0,	2,	NULL,	3,	NULL),
+('Message',	3,	3,	1,	2,	NULL,	NULL,	'You ate the cookie. Delicious!');
 
 -- 2021-08-31 12:07:02

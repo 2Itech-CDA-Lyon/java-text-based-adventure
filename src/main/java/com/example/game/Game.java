@@ -1,17 +1,25 @@
 package com.example.game;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.example.game.command.Command;
-import com.example.game.effect.ChangeStateEffect;
-import com.example.game.effect.Effect;
-import com.example.game.effect.EndGameEffect;
-import com.example.game.effect.MessageEffect;
-import com.example.game.effect.RemoveItemEffect;
-import com.example.game.effect.RenameItemEffect;
-import com.example.game.state.State;
+import javax.persistence.*;
+
+import com.example.entity.Command;
+import com.example.entity.Direction;
+import com.example.entity.Item;
+import com.example.entity.Room;
+import com.example.entity.RoomConnection;
+import com.example.entity.effect.AbstractEffect;
+import com.example.entity.effect.ChangeStateEffect;
+import com.example.entity.effect.EndGameEffect;
+import com.example.entity.effect.MessageEffect;
+import com.example.entity.effect.RemoveItemEffect;
+import com.example.entity.effect.RenameItemEffect;
+import com.example.entity.state.State;
+import com.example.interfaces.Effect;
 
 /**
  * Represents a game played by the user
@@ -52,70 +60,27 @@ public class Game
      */
     public void setup()
     {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("TextBasedAdventure");
+        EntityManager entityManager = factory.createEntityManager();
+        List<State<?>> allState = entityManager.createQuery("SELECT state FROM State state").getResultList();
+
+
+
+
+
+
+
+
         Room room = Room.getById(1);
 
-        // Crée les éléments de l'univers
-        Direction east = new Direction("east", "East");
-        Direction south = new Direction("south", "South");
-        Direction west = new Direction("west", "West");
-        Direction north = new Direction("north", "North");
-        directions = new Direction[] { east, south, west, north };
-
-        Room bedroom = new Room("bedroom");
-        Room bathroom = new Room("bathroom");
-        Room corridor = new Room("corridor");
-        bedroom.setRoomInDirection(west, bathroom);
-        bathroom.setRoomInDirection(east, bedroom);
-        bedroom.setRoomInDirection(north, corridor);
-        corridor.setRoomInDirection(south, bedroom);
-
-        Item bed = new Item(bedroom, "bed");
-        Item desk = new Item(bedroom, "desk");
-        Item pen = new Item(bedroom, "pen");
-        Item window = new Item(bedroom, "window");
-        Item cookie = new Item(bathroom, "cookie");
-        Item plug = new Item(bathroom, "plug");
-
-        State<Boolean> windowOpen = new State<Boolean>(window, "open", false);
-
-        Command close = new Command("close", "This does not seem to close.");
-        Command open = new Command("open", "This does not seem to open.");
-        Command pickUp = new Command("pick up", "You don't want to carry this.");
-        Command use = new Command("use", "You have no idea how to use this.");
-        Command eat = new Command("eat", "This does not seem edible...");
-        Command touch = new Command("touch", "It has no special feeling to it.");
-        commands = new Command[] { close, eat, open, pickUp, use, touch };
-
-        bed.addEffects(use, Arrays.<Effect>asList(
-            new MessageEffect("You take a quick nap. You feel refreshed!")
-        ));
-        desk.addEffects(open, Arrays.<Effect>asList(
-            new MessageEffect("The desk's drawers are desperately empty."),
-            new RenameItemEffect(desk, "empty desk")
-        ));
-        pen.addEffects(pickUp, Arrays.<Effect>asList(
-            new RemoveItemEffect(pen),
-            new MessageEffect("You picked up the pen.")
-        ));
-        window.addEffects(open, Arrays.<Effect>asList(
-            new ChangeStateEffect<Boolean>(windowOpen, true),
-            new MessageEffect("The window is now open.")
-        ));
-        window.addEffects(close, Arrays.<Effect>asList(
-            new ChangeStateEffect<Boolean>(windowOpen, false),
-            new MessageEffect("The window is now closed.")
-        ));
-        cookie.addEffects(eat, Arrays.<Effect>asList(
-            new RemoveItemEffect(cookie),
-            new MessageEffect("You ate the cookie. Delicious!")
-        ));
-        plug.addEffects(touch, Arrays.<Effect>asList(
-            new MessageEffect("You electrocuted yourself!"),
-            new EndGameEffect(this)
-        ));
+        for (RoomConnection connection : room.getConnectionsTo()) {
+            System.out.println(
+                connection.getFromRoom().getName() + " connects to " + connection.getToRoom().getName() + " through " + connection.getDirection().getName()
+            );
+        }
 
         // Choisit le lieu de départ
-        currentRoom = bedroom;
+        currentRoom = room;
 
         isRunning = true;
     }

@@ -1,4 +1,4 @@
-package com.example.game.effect;
+package com.example.interfaces;
 
 /**
  * Represents an effect resulting from a command

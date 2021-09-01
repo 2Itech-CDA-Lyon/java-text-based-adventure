@@ -1,11 +1,11 @@
-package com.example.game.effect;
+package com.example.entity.effect;
 
-import com.example.game.state.State;
+import com.example.entity.state.State;
 
 /**
  * Represents an effect that produces a state change
  */
-public class ChangeStateEffect<T> implements Effect
+public class ChangeStateEffect<T> extends AbstractEffect
 {
     /**
      * The state whose value to change

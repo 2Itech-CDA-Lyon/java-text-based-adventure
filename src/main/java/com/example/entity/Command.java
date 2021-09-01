@@ -1,21 +1,49 @@
-package com.example.game.command;
+package com.example.entity;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.persistence.*;
+
+import com.example.entity.effect.AbstractEffect;
+import com.example.interfaces.Effect;
 
 /**
  * Represents a command entered by the user
  */
+@Entity
+@Table(name = "commands")
 public class Command
 {
     /**
+     * Database identifier
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+    /**
      * The user input this command responds to
      */
+    @Column(name = "command")
     private String command;
     /**
      * The message to display when the command was used with an item that has no effect bound to it
      */
+    @Column(name = "default_message")
     private String defaultMessage;
+    /**
+     * List of all effects associated with the command
+     */
+    @OneToMany
+    @JoinColumn(name = "command_id")
+    private List<AbstractEffect> effects;
+
+    public Command()
+    {
+        
+    }
 
     /**
      * Create new command
