@@ -50,6 +50,7 @@ public class RenameItemEffect extends AbstractEffect
     /**
      * Trigger effect
      */
+    @Override
     public void trigger()
     {
         targetItem.setName(newName);

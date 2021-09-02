@@ -41,6 +41,7 @@ public class MessageEffect extends AbstractEffect
     /**
      * Trigger effect
      */
+    @Override
     public void trigger()
     {
         System.out.println(message);

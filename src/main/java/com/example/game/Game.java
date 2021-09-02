@@ -1,6 +1,5 @@
 package com.example.game;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -13,13 +12,6 @@ import com.example.entity.Item;
 import com.example.entity.Room;
 import com.example.entity.RoomConnection;
 import com.example.entity.effect.AbstractEffect;
-import com.example.entity.effect.ChangeStateEffect;
-import com.example.entity.effect.EndGameEffect;
-import com.example.entity.effect.MessageEffect;
-import com.example.entity.effect.RemoveItemEffect;
-import com.example.entity.effect.RenameItemEffect;
-import com.example.entity.state.State;
-import com.example.interfaces.Effect;
 
 /**
  * Represents a game played by the user
@@ -62,7 +54,7 @@ public class Game
     {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("TextBasedAdventure");
         EntityManager entityManager = factory.createEntityManager();
-        List<State<?>> allState = entityManager.createQuery("SELECT state FROM State state").getResultList();
+        List<AbstractEffect> allEffects = entityManager.createQuery("SELECT effect FROM AbstractEffect effect", AbstractEffect.class).getResultList();
 
 
 

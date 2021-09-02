@@ -47,6 +47,7 @@ public class RemoveItemEffect extends AbstractEffect
     /**
      * Trigger effect
      */
+    @Override
     public void trigger()
     {
         targetItem.setRoom(null);

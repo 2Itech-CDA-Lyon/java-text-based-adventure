@@ -34,6 +34,7 @@ public class EndGameEffect extends AbstractEffect
     /**
      * Trigger the effect
      */
+    @Override
     public void trigger()
     {
         game.terminate();
