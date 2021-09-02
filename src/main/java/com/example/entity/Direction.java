@@ -7,15 +7,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "directions")
-public class Direction
+public class Direction extends AbstractEntity
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
     /**
      * Command that triggers the direction
      */

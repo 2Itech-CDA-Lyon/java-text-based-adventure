@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import javax.persistence.*;
-
 import com.example.entity.Command;
 import com.example.entity.Direction;
 import com.example.entity.Item;
 import com.example.entity.Room;
-import com.example.entity.RoomConnection;
-import com.example.entity.effect.AbstractEffect;
+import com.example.repository.DirectionRepository;
+import com.example.repository.RoomRepository;
 
 /**
  * Represents a game played by the user
@@ -52,24 +50,19 @@ public class Game
      */
     public void setup()
     {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("TextBasedAdventure");
-        EntityManager entityManager = factory.createEntityManager();
-        List<AbstractEffect> allEffects = entityManager.createQuery("SELECT effect FROM AbstractEffect effect", AbstractEffect.class).getResultList();
+        RoomRepository roomRepository = new RoomRepository();
+        DirectionRepository directionRepository = new DirectionRepository();
+        List<Room> rooms = roomRepository.findAll();
+
+        Room room = roomRepository.findById(1);
+
+        Direction direction = directionRepository.findById(3);
+
+        Room connectedRoom = roomRepository.findByStartingRoomAndDirection(room, direction);
 
 
 
 
-
-
-
-
-        Room room = Room.getById(1);
-
-        for (RoomConnection connection : room.getConnectionsTo()) {
-            System.out.println(
-                connection.getFromRoom().getName() + " connects to " + connection.getToRoom().getName() + " through " + connection.getDirection().getName()
-            );
-        }
 
         // Choisit le lieu de départ
         currentRoom = room;
@@ -89,7 +82,7 @@ public class Game
         for (Map.Entry<Direction, Room> entry : currentRoom.getConnectedRooms().entrySet()) {
             System.out.println(entry.getKey().getName() + " is the " + entry.getValue().getName() + ".");
         }
-        // Affiche la liste des objets interactif diposnibles
+        // Affiche la liste des objets interactifs diposnibles
         if (currentRoom.getItems().isEmpty()) {
             System.out.println("No visible items.");
         } else {

@@ -12,15 +12,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "rooms")
-public class Room
+public class Room extends AbstractEntity
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
     /**
      * Room name
      */
@@ -44,13 +37,6 @@ public class Room
     @OneToMany
     @JoinColumn(name = "room_id")
     private List<Item> items;
-
-    public static Room getById(Integer id)
-    {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("TextBasedAdventure");
-        EntityManager entityManager = factory.createEntityManager();
-        return entityManager.find(Room.class, id);
-    }
 
     public Room()
     {
