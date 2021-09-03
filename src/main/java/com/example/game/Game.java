@@ -8,7 +8,13 @@ import com.example.entity.Command;
 import com.example.entity.Direction;
 import com.example.entity.Item;
 import com.example.entity.Room;
+import com.example.entity.RoomConnection;
+import com.example.entity.effect.AbstractEffect;
+import com.example.interfaces.Effect;
+import com.example.repository.CommandRepository;
 import com.example.repository.DirectionRepository;
+import com.example.repository.EffectRepository;
+import com.example.repository.ItemRepository;
 import com.example.repository.RoomRepository;
 
 /**
@@ -50,22 +56,9 @@ public class Game
      */
     public void setup()
     {
-        RoomRepository roomRepository = new RoomRepository();
-        DirectionRepository directionRepository = new DirectionRepository();
-        List<Room> rooms = roomRepository.findAll();
-
-        Room room = roomRepository.findById(1);
-
-        Direction direction = directionRepository.findById(3);
-
-        Room connectedRoom = roomRepository.findByStartingRoomAndDirection(room, direction);
-
-
-
-
-
         // Choisit le lieu de départ
-        currentRoom = room;
+        RoomRepository roomRepository = new RoomRepository();
+        currentRoom = roomRepository.findById(1);
 
         isRunning = true;
     }
@@ -79,62 +72,85 @@ public class Game
         System.out.println("");
         System.out.println("You are in the " + currentRoom.getName() + ".");
         // Affiche la liste des directions possibles
-        for (Map.Entry<Direction, Room> entry : currentRoom.getConnectedRooms().entrySet()) {
-            System.out.println(entry.getKey().getName() + " is the " + entry.getValue().getName() + ".");
+        for (RoomConnection connection : currentRoom.getConnectionsFrom()) {
+            System.out.println(
+                String.format("%s is the %s.", connection.getDirection().getName(), connection.getToRoom().getName())
+            );
         }
         // Affiche la liste des objets interactifs diposnibles
-        if (currentRoom.getItems().isEmpty()) {
+        List<Item> itemsInRoom = currentRoom.getItems();
+        if (itemsInRoom.isEmpty()) {
             System.out.println("No visible items.");
         } else {
             System.out.println("Visible items:");
-            for (Item item : currentRoom.getItems()) {
+            for (Item item : itemsInRoom) {
                 System.out.println("* " + item.getName());
             }
         }
 
-        // Attendre une saisie de l'utilisateur
+        // Attend une saisie de l'utilisateur
         System.out.print("> ");
         String userInput = scanner.nextLine();
-        // Vérifier la saisie de l'utilisateur
+        // Vérifie la saisie de l'utilisateur
         if ("exit".equals(userInput)) {
             terminate();
             return;
         }
 
-        // Cherche parmi toutes les directions existantes, à laquelle correspond la saisie de l'utilisateur 
-        for (Direction direction : directions) {
-            if (direction.getCommand().equals(userInput)) {
-                // Récupère le lieu vers lequel la direction choisie doit nous emmener
-                Room targetRoom = currentRoom.getRoomInDirection(direction);
-                // Si le lieu n'existe pas, c'est donc qu'il n'est pas possible d'aller dans cette direction
-                if (targetRoom == null) {
-                    System.out.println("You cannot go into that direction!");
-                    return;
-                }
-                // Change le lieu actuel
-                currentRoom = targetRoom;
+        // Récupère la direction correspondant à la saisie de l'utilisateur en base de données
+        DirectionRepository directionRepository = new DirectionRepository();
+        Direction direction = directionRepository.findByCommand(userInput);
+
+        // Si la saisie de l'utilisateur correspondait bien à une direction
+        if (direction != null) {
+            RoomRepository roomRepository = new RoomRepository();
+
+            // Récupère le lieu vers lequel la direction choisie doit nous emmener
+            Room targetRoom = roomRepository.findByStartingRoomAndDirection(currentRoom, direction);
+            // Si le lieu n'existe pas, c'est donc qu'il n'est pas possible d'aller dans cette direction
+            if (targetRoom == null) {
+                System.out.println("You cannot go into that direction!");
                 return;
             }
+            // Change le lieu actuel
+            currentRoom = targetRoom;
+            return;
         }
 
-        // Cherche parmi toutes les commandes existantes, à laquelle correspond la saisie de l'utilisateur
-        for (Command command : commands) {
-            // Charge la commande de déterminer si la saisie utilisateur lui correspond
-            // et récupère le nom de l'élément à laquelle la commande s'applique le cas échéant
+        // Récupère la commande correspondant à la saisie de l'utilisateur en base de données
+        CommandRepository commandRepository = new CommandRepository();
+        Command command = commandRepository.findByCommand(userInput);
+
+        // Si la saisie de l'utilisateur correspondait bien à une commande
+        if (command != null) {
+            // Récupère le nom de l'objet dans la commande entrée par l'utilisateur
             String itemName = command.match(userInput);
-            // Si la commande correspond à la saisie utilisateur
-            if (itemName != null) {
-                // Charge le lieu de déterminer si un élément avec le nom spécifié dans la commande existe
-                Item item = currentRoom.findItemByName(itemName);
-                // Si le nom d'objet entré par l'utilisateur ne correspond à aucun objet présent dans le lieu
-                if (item == null) {
-                    System.out.println("There is no such object here!");
-                    return;
-                }
-                // Sinon, charge l'élément de déclencher les effets associés à la commande saisie                
-                item.triggerEffects(command);
+            // Récupère l'objet correspondant dans le lieu actuel en base de données
+            ItemRepository itemRepository = new ItemRepository();
+            Item item = itemRepository.findByNameAndByRoom(itemName, currentRoom);
+
+            // Si le nom d'objet entré par l'utilisateur ne correspond à aucun objet présent dans le lieu actuel
+            if (item == null) {
+                System.out.println("There is no such object here!");
                 return;
             }
+
+            // Récupère l'ensemble des effets prévus lorsque la commande entrée par l'utilisateur est utilisée avec l'objet
+            EffectRepository effectRepository = new EffectRepository();
+            List<AbstractEffect> effects = effectRepository.findByItemAndCommand(item, command);
+
+            // Si aucun effet n'a été prévu lorsqu'on utilsie cette commande sur cet objet, affiche le message par défaut de la commande
+            if (effects.isEmpty()) {
+                System.out.println(command.getDefaultMessage());
+                return;
+            }
+
+            // Sinon, déclenche tous les effets dans l'ordre
+            for (AbstractEffect effect : effects) {
+                effect.trigger();
+            }
+            
+            return;
         }
 
         // Si aucune correspondance n'a été trouvée, c'est donc que la commande est invalide

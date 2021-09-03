@@ -12,15 +12,8 @@ import com.example.interfaces.Effect;
 @Table(name = "effects")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "effect_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class AbstractEffect implements Effect
+public abstract class AbstractEffect extends AbstractEntity implements Effect
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    protected Integer id;
     /**
      * The order in which the effect should be executed
      */

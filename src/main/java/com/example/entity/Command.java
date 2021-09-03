@@ -7,22 +7,14 @@ import java.util.regex.Pattern;
 import javax.persistence.*;
 
 import com.example.entity.effect.AbstractEffect;
-import com.example.interfaces.Effect;
 
 /**
  * Represents a command entered by the user
  */
 @Entity
 @Table(name = "commands")
-public class Command
+public class Command extends AbstractEntity
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
     /**
      * The user input this command responds to
      */
@@ -63,7 +55,7 @@ public class Command
      */
     public String match(String userInput)
     {
-        Pattern pattern = Pattern.compile("^" + command + "\\s(.+)$");
+        Pattern pattern = Pattern.compile(String.format("^%s$", command.replace("%", "(.+)")));
         Matcher matcher = pattern.matcher(userInput);
         if (matcher.find()) {
             return matcher.group(1);

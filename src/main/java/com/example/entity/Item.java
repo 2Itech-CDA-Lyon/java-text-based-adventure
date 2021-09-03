@@ -14,15 +14,8 @@ import com.example.interfaces.Effect;
  */
 @Entity
 @Table(name = "items")
-public class Item
+public class Item extends AbstractEntity
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
     /**
      * Item name
      */
