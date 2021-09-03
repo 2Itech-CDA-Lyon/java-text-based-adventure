@@ -2,8 +2,6 @@ package com.example.repository;
 
 import java.util.List;
 
-import javax.persistence.*;
-
 import com.example.entity.Command;
 import com.example.entity.Item;
 import com.example.entity.effect.AbstractEffect;
@@ -29,11 +27,9 @@ public class EffectRepository extends Repository<AbstractEffect>
      */
     public List<AbstractEffect> findByItemAndCommand(Item item, Command command)
     {
-        try{
-            return entityManager.createQuery("SELECT effect FROM AbstractEffect effect WHERE item = :item AND command = :command ORDER BY order ASC", AbstractEffect.class)
-                .setParameter("item", item)
-                .setParameter("command", command)
-                .getResultList();
-        }
+        return entityManager.createQuery("SELECT effect FROM AbstractEffect effect WHERE item = :item AND command = :command ORDER BY order ASC", AbstractEffect.class)
+            .setParameter("item", item)
+            .setParameter("command", command)
+            .getResultList();
     }
 }

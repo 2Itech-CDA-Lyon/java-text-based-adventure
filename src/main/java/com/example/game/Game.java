@@ -1,7 +1,6 @@
 package com.example.game;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.example.entity.Command;
@@ -10,7 +9,6 @@ import com.example.entity.Item;
 import com.example.entity.Room;
 import com.example.entity.RoomConnection;
 import com.example.entity.effect.AbstractEffect;
-import com.example.interfaces.Effect;
 import com.example.repository.CommandRepository;
 import com.example.repository.DirectionRepository;
 import com.example.repository.EffectRepository;
@@ -31,17 +29,9 @@ public class Game
      */
     private boolean isRunning;
     /**
-     * List of all existing directions
-     */
-    private Direction[] directions;
-    /**
      * The room the player is currently in
      */
     private Room currentRoom;
-    /**
-     * List of all existing commands
-     */
-    private Command[] commands;
 
     /**
      * Create new game

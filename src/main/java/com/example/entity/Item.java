@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 import com.example.entity.effect.AbstractEffect;
 import com.example.entity.state.State;
-import com.example.interfaces.Effect;
 
 /**
  * Represents an interactive item in the universe
@@ -36,7 +35,8 @@ public class Item extends AbstractEntity
     /**
      * List of all states applying to the item
      */
-    @Transient
+    @OneToMany
+    @JoinColumn(name = "item_id")
     private List<State<?>> states;
 
     public Item()
@@ -58,25 +58,6 @@ public class Item extends AbstractEntity
 
         effects = new ArrayList<>();
         states = new ArrayList<>();
-    }
-
-    /**
-     * Trigger the list of effects associated with the given command
-     * @param command The desired command
-     */
-    public void triggerEffects(Command command)
-    {
-        // List<Effect> effects = getEffects(command);
-        effects = new ArrayList<>();
-        // Si aucun effet n'a été prévu, affiche le message par défaut de la commande
-        if (effects == null) {
-            System.out.println(command.getDefaultMessage());
-        // Sinon, déclenche les effets les uns après les autres
-        } else {
-            for (Effect effect : effects) {
-                effect.trigger();
-            }
-        }
     }
 
     public String getName() {

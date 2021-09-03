@@ -62,7 +62,7 @@ public abstract class State<T>
         this.item = item;
         this.name = name;
         setDefaultValue(defaultValue);
-        this.value = defaultValue;
+        resetValue();
 
         item.addState(this);
     }

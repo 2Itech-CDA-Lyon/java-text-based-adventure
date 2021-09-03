@@ -1,9 +1,7 @@
 package com.example.entity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.*;
 
@@ -56,42 +54,6 @@ public class Room extends AbstractEntity
     }
 
     /**
-     * Get room connected to this room in a given direction
-     * @param direction The direction from this room
-     * @return
-     */
-    public Room getRoomInDirection(Direction direction)
-    {
-        // return connectedRooms.get(direction);
-        return null;
-    }
-
-    /**
-     * Set room connected to this room in a given direction
-     * @param direction The direction from this room
-     * @param targetRoom The target room
-     */
-    public void setRoomInDirection(Direction direction, Room targetRoom)
-    {
-        // connectedRooms.put(direction, targetRoom);
-    }
-
-    /**
-     * Find item with the current name inside the room
-     * @param itemName The name of the item to be searched
-     * @return The item if it was found, null otherwise
-     */
-    public Item findItemByName(String itemName)
-    {
-        for (Item item : items) {
-            if (itemName.equals(item.getName())) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get room name
      * @return
      */
@@ -117,16 +79,6 @@ public class Room extends AbstractEntity
     public List<RoomConnection> getConnectionsTo()
     {
         return connectionsTo;
-    }
-
-    /**
-     * Get all connected rooms with their associated directions
-     * @return
-     */
-    public Map<Direction, Room> getConnectedRooms()
-    {
-        // return connectedRooms;
-        return null;
     }
 
     /**

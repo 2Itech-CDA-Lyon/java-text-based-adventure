@@ -9,8 +9,6 @@ import javax.persistence.*;
 @DiscriminatorValue("ChangeNumberState")
 public class ChangeNumberStateEffect extends ChangeStateEffect<Double>
 {
-    
-
     final static public int OPERATOR_NUMBER_SET = 0;
     final static public int OPERATOR_NUMBER_PLUS = 1;
     final static public int OPERATOR_NUMBER_MINUS = 2;
@@ -30,24 +28,24 @@ public class ChangeNumberStateEffect extends ChangeStateEffect<Double>
     }
 
     @Override    
-        public void trigger()
+    public void trigger()
+    {
+        switch(operator)
         {
-            switch(operator)
-            {
-                // Set
-                case OPERATOR_NUMBER_SET: 
-                    break;
-                // Plus
-                case OPERATOR_NUMBER_PLUS:
-                    break;
-                // Minus
-                case OPERATOR_NUMBER_MINUS:
-                    break;
-                // Multiply
-                case OPERATOR_NUMBER_MULTIPLY:
-                    break;
-            }
+            // Set
+            case OPERATOR_NUMBER_SET: 
+                break;
+            // Plus
+            case OPERATOR_NUMBER_PLUS:
+                break;
+            // Minus
+            case OPERATOR_NUMBER_MINUS:
+                break;
+            // Multiply
+            case OPERATOR_NUMBER_MULTIPLY:
+                break;
         }
+    }
 
     @Override
     public Double getValue()
