@@ -62,6 +62,11 @@ public class Room extends AbstractEntity
         return name;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     /**
      * Get list of all items present in the room
      * @return

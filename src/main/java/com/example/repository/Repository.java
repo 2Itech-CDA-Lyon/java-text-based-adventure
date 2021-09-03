@@ -51,4 +51,30 @@ public abstract class Repository<T extends AbstractEntity>
             .setParameter("id", id)
             .getSingleResult();
     }
+
+    /**
+     * Persist an object's current state to database
+     * @param object The object to persist
+     */
+    public void save(T object)
+    {
+        entityManager.getTransaction().begin();
+        if (object.getId() == null) {
+            entityManager.persist(object);
+        } else {
+            entityManager.merge(object);
+        }
+        entityManager.getTransaction().commit();
+    }
+
+    /**
+     * Delete an object from database
+     * @param object The object to delete
+     */
+    public void delete(T object)
+    {
+        entityManager.getTransaction().begin();
+        entityManager.remove(object);
+        entityManager.getTransaction().commit();
+    }
 }
