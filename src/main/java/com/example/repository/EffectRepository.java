@@ -35,8 +35,5 @@ public class EffectRepository extends Repository<AbstractEffect>
                 .setParameter("command", command)
                 .getResultList();
         }
-        catch (NoResultException e){
-            return null;
-        }
     }
 }
