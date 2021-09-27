@@ -11,6 +11,19 @@ DROP DATABASE IF EXISTS `2itech-cda-lyon-tba`;
 CREATE DATABASE `2itech-cda-lyon-tba` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `2itech-cda-lyon-tba`;
 
+DROP TABLE IF EXISTS `rooms`;
+CREATE TABLE `rooms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `rooms` (`id`, `name`) VALUES
+(1,	'bedroom'),
+(2,	'bathroom'),
+(3,	'corridor'),
+(4,	'kitchen');
+
 DROP TABLE IF EXISTS `items`;
 CREATE TABLE `items` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -26,19 +39,6 @@ INSERT INTO `items` (`id`, `name`, `room_id`) VALUES
 (1,	'bed',	1),
 (3,	'cookie',	4),
 (2,	'window',	1);
-
-DROP TABLE IF EXISTS `rooms`;
-CREATE TABLE `rooms` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `rooms` (`id`, `name`) VALUES
-(1,	'bedroom'),
-(2,	'bathroom'),
-(3,	'corridor'),
-(4,	'kitchen');
 
 DROP TABLE IF EXISTS `commands`;
 CREATE TABLE `commands` (
