@@ -24,7 +24,7 @@ public class RoomRepository extends Repository<Room>
      * @return
      */
     public Room findByStartingRoomAndDirection(Room startingRoom, Direction direction)
-    { 
+    {
         try {
             Room room = entityManager.createQuery("SELECT room FROM Room room INNER JOIN room.connectionsTo AS connection WHERE connection.fromRoom = :startingRoom AND connection.direction = :direction", Room.class)
                 .setParameter("startingRoom", startingRoom)

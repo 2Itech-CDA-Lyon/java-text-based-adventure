@@ -204,3 +204,11 @@ Maintenant que la base de données est créée, il faut adapter le code Java afi
 - Ajouter Hibernate comme dépendance à l'application.
 - Adapter le code des modéles afin de configurer Hibernate correctement.
 - Écrire des méthodes permettant de récupérer un élément de la base de données en fonction de son identifiant, et vérifier qu'elles fonctionnent correctement.
+
+## Mission 6: ajouter un éditeur de lieux
+
+Dans le fichier **Editor.java**, coder une application en ligne de commandes permettant d'obtenir la liste de tous les lieux existants dans la base de données, de créer des nouveaux lieux, modifier et supprimer des lieux existants.
+
+### BONUS
+
+Essayer d'appliquer les bonnes pratiques de programmation orientée objet étudiée en cours afin d'obtenir un code bien structuré et maintenable.
