@@ -20,16 +20,17 @@ CREATE TABLE `commands` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `commands` (`id`, `command`, `default_message`) VALUES
-(1,	'open',	'This doesn\'t seem to open.'),
-(2,	'eat',	'This is not edible!'),
-(3,	'use',	'You have no idea how to use this.');
+(1,	'open %',	'This doesn\'t seem to open.'),
+(2,	'eat %',	'This is not edible!'),
+(3,	'use %',	'You have no idea how to use this.');
 
 DROP TABLE IF EXISTS `directions`;
 CREATE TABLE `directions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `command` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `command` (`command`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `directions` (`id`, `command`, `name`) VALUES
@@ -37,6 +38,55 @@ INSERT INTO `directions` (`id`, `command`, `name`) VALUES
 (2,	'south',	'South'),
 (3,	'west',	'West'),
 (4,	'north',	'North');
+
+DROP TABLE IF EXISTS `effects`;
+CREATE TABLE `effects` (
+  `effect_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `item_id` int(10) unsigned NOT NULL,
+  `_order` int(10) unsigned NOT NULL,
+  `command_id` int(10) unsigned NOT NULL,
+  `new_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target_item_id` int(10) unsigned DEFAULT NULL,
+  `message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target_state_id` int(10) unsigned DEFAULT NULL,
+  `operator` tinyint(4) DEFAULT NULL,
+  `boolean_value` tinyint(1) DEFAULT NULL,
+  `number_value` double DEFAULT NULL,
+  `string_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_id_command_id__order` (`item_id`,`command_id`,`_order`),
+  KEY `command_id` (`command_id`),
+  KEY `target_item_id` (`target_item_id`),
+  KEY `target_state_id` (`target_state_id`),
+  CONSTRAINT `effects_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `effects_ibfk_2` FOREIGN KEY (`command_id`) REFERENCES `commands` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `effects_ibfk_3` FOREIGN KEY (`target_item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `effects_ibfk_4` FOREIGN KEY (`target_state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `effects` (`effect_type`, `id`, `item_id`, `_order`, `command_id`, `new_name`, `target_item_id`, `message`, `target_state_id`, `operator`, `boolean_value`, `number_value`, `string_value`) VALUES
+('Message',	1,	2,	0,	1,	NULL,	NULL,	'The window is now open.',	NULL,	NULL,	NULL,	NULL,	NULL),
+('RemoveItem',	2,	3,	0,	2,	NULL,	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+('Message',	3,	3,	1,	2,	NULL,	NULL,	'You ate the cookie. Delicious!',	NULL,	NULL,	NULL,	NULL,	NULL),
+('ChangeNumberState',	4,	1,	0,	3,	NULL,	NULL,	NULL,	2,	1,	NULL,	1,	NULL),
+('Message',	5,	1,	1,	3,	NULL,	NULL,	'You took a quick nap. You feel refreshed!',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE `items` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `room_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_room_id` (`name`,`room_id`),
+  KEY `room_id` (`room_id`),
+  CONSTRAINT `items_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `items` (`id`, `name`, `room_id`) VALUES
+(1,	'bed',	1),
+(3,	'cookie',	4),
+(2,	'window',	1);
 
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
@@ -50,21 +100,6 @@ INSERT INTO `rooms` (`id`, `name`) VALUES
 (2,	'bathroom'),
 (3,	'corridor'),
 (4,	'kitchen');
-
-DROP TABLE IF EXISTS `items`;
-CREATE TABLE `items` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `room_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `room_id` (`room_id`),
-  CONSTRAINT `items_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `items` (`id`, `name`, `room_id`) VALUES
-(1,	'bed',	1),
-(2,	'window',	1),
-(3,	'cookie',	4);
 
 DROP TABLE IF EXISTS `room_connections`;
 CREATE TABLE `room_connections` (
@@ -107,37 +142,4 @@ INSERT INTO `states` (`state_type`, `id`, `name`, `item_id`, `boolean_default_va
 ('Boolean',	1,	'window_open',	2,	0,	NULL,	NULL),
 ('Number',	2,	'times_slept',	1,	NULL,	0,	NULL);
 
-DROP TABLE IF EXISTS `effects`;
-CREATE TABLE `effects` (
-  `effect_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `item_id` int(10) unsigned NOT NULL,
-  `_order` int(10) unsigned NOT NULL,
-  `command_id` int(10) unsigned NOT NULL,
-  `new_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `target_item_id` int(10) unsigned DEFAULT NULL,
-  `message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `target_state_id` int(10) unsigned DEFAULT NULL,
-  `operator` tinyint(4) DEFAULT NULL,
-  `boolean_value` tinyint(1) DEFAULT NULL,
-  `number_value` double DEFAULT NULL,
-  `string_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `item_id_command_id__order` (`item_id`,`command_id`,`_order`),
-  KEY `command_id` (`command_id`),
-  KEY `target_item_id` (`target_item_id`),
-  KEY `target_state_id` (`target_state_id`),
-  CONSTRAINT `effects_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `effects_ibfk_2` FOREIGN KEY (`command_id`) REFERENCES `commands` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `effects_ibfk_3` FOREIGN KEY (`target_item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `effects_ibfk_4` FOREIGN KEY (`target_state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `effects` (`effect_type`, `id`, `item_id`, `_order`, `command_id`, `new_name`, `target_item_id`, `message`, `target_state_id`, `operator`, `boolean_value`, `number_value`, `string_value`) VALUES
-('Message',	1,	2,	0,	1,	NULL,	NULL,	'The window is now open.',	NULL,	NULL,	NULL,	NULL,	NULL),
-('RemoveItem',	2,	3,	0,	2,	NULL,	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-('Message',	3,	3,	1,	2,	NULL,	NULL,	'You ate the cookie. Delicious!',	NULL,	NULL,	NULL,	NULL,	NULL),
-('ChangeNumberState',	4,	1,	0,	3,	NULL,	NULL,	NULL,	2,	1,	NULL,	1,	NULL),
-('Message',	5,	1,	1,	3,	NULL,	NULL,	'You took a quick nap. You feel refreshed!',	NULL,	NULL,	NULL,	NULL,	NULL);
-
--- 2021-09-02 09:27:17
+-- 2021-09-03 09:46:12
