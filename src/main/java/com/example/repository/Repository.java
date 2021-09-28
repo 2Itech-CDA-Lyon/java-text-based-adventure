@@ -74,7 +74,12 @@ public abstract class Repository<T extends AbstractEntity>
     public void delete(T object)
     {
         entityManager.getTransaction().begin();
-        entityManager.remove(object);
+        if (!entityManager.contains(object)) {
+            AbstractEntity mergedObject = entityManager.getReference(object.getClass(), object.getId());
+            entityManager.remove(mergedObject);
+        } else {
+            entityManager.remove(object);
+        }
         entityManager.getTransaction().commit();
     }
 }
