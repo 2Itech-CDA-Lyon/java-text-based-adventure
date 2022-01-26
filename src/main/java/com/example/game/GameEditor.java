@@ -2,15 +2,10 @@ package com.example.game;
 
 import java.util.Scanner;
 
-import com.example.entity.Room;
 import com.example.game.mode.*;
 
 public class GameEditor
 {
-    public static final int MENU_ROOM_LIST = 0;
-    public static final int MENU_SINGLE_ROOM = 1;
-    public static final int MENU_EDIT_ROOM = 2;
-
     /**
      * Interface used to read user input
      */

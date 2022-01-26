@@ -12,7 +12,7 @@ public class DirectionRepository extends Repository<Direction>
     }
 
     /**
-     * Find a command based on its command
+     * Find a direction based on its command
      * @param command The command to be looked up
      * @return
      */

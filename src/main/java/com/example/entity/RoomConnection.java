@@ -7,15 +7,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "room_connections")
-public class RoomConnection
+public class RoomConnection extends AbstractEntity
 {
-    /**
-     * Database identifier
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
     /**
      * The starting room
      */
@@ -38,14 +31,6 @@ public class RoomConnection
     public RoomConnection()
     {
         
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Room getFromRoom() {
